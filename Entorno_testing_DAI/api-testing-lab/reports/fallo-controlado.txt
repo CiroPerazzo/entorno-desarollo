@@ -1,0 +1,43 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> api-testing-lab@1.0.0 demo:fallo
+> node scripts/run-newman.js --auto --fallo
+
+(node:54) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+DAI — Falla intencional
+
+→ FALLA INTENCIONAL: esperamos 201 pero health devuelve 200
+  GET http://127.0.0.1:33201/api/health [200 OK, 226B, 26ms]
+  1. FALLA INTENCIONAL: esperamos 201 en health
+  ✓  Content-Type JSON
+  ✓  Estado correcto
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                0 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │                3 │                1 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 61ms                                      │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 15B (approx)                             │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 26ms [min: 26ms, max: 26ms, s.d.: 0µs] │
+└───────────────────────────────────────────────────────────────┘
+
+  #  failure         detail                                                             
+                                                                                        
+ 1.  AssertionError  FALLA INTENCIONAL: esperamos 201 en health                         
+                     expected response to have status code 201 but got 200              
+                     at assertion:0 in test-script                                      
+                     inside "FALLA INTENCIONAL: esperamos 201 pero health devuelve 200" 

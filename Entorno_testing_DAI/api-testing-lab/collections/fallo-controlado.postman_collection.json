@@ -1,0 +1,49 @@
+{
+  "info": {
+    "name": "DAI — Falla intencional",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "15 casos reproducibles. API de tareas local. Ejecutar en orden desde 00. Datos ficticios y autenticación simulada."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "taskId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "FALLA INTENCIONAL: esperamos 201 pero health devuelve 200",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/health",
+        "description": "Esperado: 200. Ejecutar en orden desde 00 para preparar datos y variables."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('FALLA INTENCIONAL: esperamos 201 en health', () => pm.response.to.have.status(201));",
+              "pm.test('Content-Type JSON', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'));",
+              "const body = pm.response.json();",
+              "pm.test('Estado correcto', () => pm.expect(body.status).to.eql('ok'));"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

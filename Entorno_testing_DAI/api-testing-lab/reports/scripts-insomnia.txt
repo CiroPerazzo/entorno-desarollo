@@ -1,0 +1,16 @@
+OK 00 Reiniciar datos
+OK 01 API encendida
+OK 02 Login incorrecto
+OK 03 Login correcto
+OK 04 Listado inicial
+OK 05 Crear sin token
+OK 06 Crear título inválido
+OK 07 Errores no crearon tareas
+OK 08 Crear tarea válida
+OK 09 Consultar tarea creada
+OK 10 Completar con tipo incorrecto
+OK 11 Completar tarea
+OK 12 Borrar tarea
+OK 13 Consultar tarea borrada
+OK 14 Listado final limpio
+50 aserciones de scripts Insomnia aprobadas mediante harness local. No verifica UI/importador real.

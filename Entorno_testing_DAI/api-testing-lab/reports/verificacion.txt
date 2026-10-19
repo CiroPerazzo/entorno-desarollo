@@ -1,0 +1,154 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> api-testing-lab@1.0.0 verify
+> npm run test:supertest && npm run test:newman:auto
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> api-testing-lab@1.0.0 test:supertest
+> node --test tests/api.test.js
+
+✔ Salud: status, header y body (31.872786ms)
+✔ Login válido devuelve token y no contraseña (10.212991ms)
+✔ Login incorrecto: 401 (3.486675ms)
+✔ Crear sin token: 401 y sin cambios (5.231633ms)
+✔ Crear con token inválido: 401 (8.501692ms)
+✔ Títulos inválidos: 400 y sin cambios (15.707961ms)
+✔ Flujo completo: crear, consultar, completar, borrar y consultar ausente (8.429904ms)
+✔ completed debe ser booleano: 400 y sin cambios (3.099601ms)
+✔ Recurso inexistente: 404 para consulta, modificación y borrado (3.821518ms)
+✔ Reset restablece datos e identificadores (5.28881ms)
+✔ JSON mal formado: 400 (2.581791ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 279.108899
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> api-testing-lab@1.0.0 test:newman:auto
+> node scripts/run-newman.js --auto
+
+(node:61) [DEP0176] DeprecationWarning: fs.F_OK is deprecated, use fs.constants.F_OK instead
+(Use `node --trace-deprecation ...` to show where the warning was created)
+newman
+
+DAI — Laboratorio de testing
+
+→ 00 Reiniciar datos
+  POST http://127.0.0.1:36939/api/testing/reset [200 OK, 225B, 22ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Reset confirmado
+
+→ 01 API encendida
+  GET http://127.0.0.1:36939/api/health [200 OK, 226B, 3ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Estado correcto
+
+→ 02 Login incorrecto
+  POST http://127.0.0.1:36939/api/login [401 Unauthorized, 257B, 9ms]
+  ✓  Status 401
+  ✓  Content-Type JSON
+  ✓  Error explicado
+
+→ 03 Login correcto
+  POST http://127.0.0.1:36939/api/login [200 OK, 280B, 2ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Token recibido
+  ✓  Email correcto
+  ✓  No expone contraseña
+
+→ 04 Listado inicial
+  GET http://127.0.0.1:36939/api/tasks [200 OK, 287B, 3ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Una tarea inicial
+  ✓  Título inicial
+
+→ 05 Crear sin token
+  POST http://127.0.0.1:36939/api/tasks [401 Unauthorized, 259B, 2ms]
+  ✓  Status 401
+  ✓  Content-Type JSON
+  ✓  Rechaza acceso
+
+→ 06 Crear título inválido
+  POST http://127.0.0.1:36939/api/tasks [400 Bad Request, 279B, 3ms]
+  ✓  Status 400
+  ✓  Content-Type JSON
+  ✓  Explica validación
+
+→ 07 Errores no crearon tareas
+  GET http://127.0.0.1:36939/api/tasks [200 OK, 287B, 2ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Sigue habiendo una tarea
+
+→ 08 Crear tarea válida
+  POST http://127.0.0.1:36939/api/tasks [201 Created, 297B, 2ms]
+  ✓  Status 201
+  ✓  Content-Type JSON
+  ✓  Identificador correcto
+  ✓  Título correcto
+  ✓  Comienza pendiente
+
+→ 09 Consultar tarea creada
+  GET http://127.0.0.1:36939/api/tasks/2 [200 OK, 268B, 2ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Es la tarea creada
+  ✓  Título guardado
+
+→ 10 Completar con tipo incorrecto
+  PATCH http://127.0.0.1:36939/api/tasks/2 [400 Bad Request, 260B, 3ms]
+  ✓  Status 400
+  ✓  Content-Type JSON
+  ✓  Rechaza string
+
+→ 11 Completar tarea
+  PATCH http://127.0.0.1:36939/api/tasks/2 [200 OK, 267B, 1ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Quedó completada
+
+→ 12 Borrar tarea
+  DELETE http://127.0.0.1:36939/api/tasks/2 [204 No Content, 111B, 2ms]
+  ✓  Status 204
+  ✓  Respuesta sin body
+
+→ 13 Consultar tarea borrada
+  GET http://127.0.0.1:36939/api/tasks/2 [404 Not Found, 250B, 1ms]
+  ✓  Status 404
+  ✓  Content-Type JSON
+  ✓  Ya no existe
+
+→ 14 Listado final limpio
+  GET http://127.0.0.1:36939/api/tasks [200 OK, 287B, 1ms]
+  ✓  Status 200
+  ✓  Content-Type JSON
+  ✓  Solo queda la inicial
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              15 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              15 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │               0 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │              50 │               0 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 275ms                                   │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 689B (approx)                          │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 3ms [min: 1ms, max: 22ms, s.d.: 5ms] │
+└─────────────────────────────────────────────────────────────┘

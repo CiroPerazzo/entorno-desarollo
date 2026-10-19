@@ -1,0 +1,392 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-16T12:05:00.000Z",
+  "__export_source": "dai-lab",
+  "resources": [
+    {
+      "_id": "wrk_dailab",
+      "_type": "workspace",
+      "name": "DAI — Laboratorio de testing",
+      "description": "API de tareas local. Ejecutar 00 a 14 en orden.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_dailab",
+      "_type": "environment",
+      "parentId": "wrk_dailab",
+      "name": "Base Environment",
+      "data": {
+        "baseUrl": "http://127.0.0.1:3000",
+        "token": "",
+        "taskId": ""
+      },
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 0
+    },
+    {
+      "_id": "req_dailab00",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "00 Reiniciar datos",
+      "description": "Status esperado 200",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/testing/reset",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 0,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Reset confirmado', () => insomnia.expect(body.reset).to.eql(true));\ninsomnia.baseEnvironment.set('token', '');\ninsomnia.baseEnvironment.set('taskId', '');\n"
+    },
+    {
+      "_id": "req_dailab01",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "01 API encendida",
+      "description": "Status esperado 200",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/health",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 1,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Estado correcto', () => insomnia.expect(body.status).to.eql('ok'));\n"
+    },
+    {
+      "_id": "req_dailab02",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "02 Login incorrecto",
+      "description": "Status esperado 401",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"alumno@demo.com\",\n  \"password\": \"mal\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 2,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 401', () => insomnia.expect(insomnia.response.status).to.eql(401));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Error explicado', () => insomnia.expect(body.error).to.eql('Credenciales inválidas'));\n"
+    },
+    {
+      "_id": "req_dailab03",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "03 Login correcto",
+      "description": "Status esperado 200",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"alumno@demo.com\",\n  \"password\": \"Demo1234!\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 3,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Token recibido', () => insomnia.expect(body.token).to.eql('token-demo-dai'));\ninsomnia.test('Email correcto', () => insomnia.expect(body.user.email).to.eql('alumno@demo.com'));\ninsomnia.test('No expone contraseña', () => insomnia.expect(Object.prototype.hasOwnProperty.call(body.user, 'password')).to.eql(false));\ninsomnia.baseEnvironment.set('token', body.token);\n"
+    },
+    {
+      "_id": "req_dailab04",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "04 Listado inicial",
+      "description": "Status esperado 200",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/tasks",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 4,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Una tarea inicial', () => insomnia.expect(body.tasks.length).to.eql(1));\ninsomnia.test('Título inicial', () => insomnia.expect(body.tasks[0].title).to.eql('Preparar presentación DAI'));\n"
+    },
+    {
+      "_id": "req_dailab05",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "05 Crear sin token",
+      "description": "Status esperado 401",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/tasks",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Tarea sin permiso\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 5,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 401', () => insomnia.expect(insomnia.response.status).to.eql(401));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Rechaza acceso', () => insomnia.expect(body.error).to.eql('Token ausente o inválido'));\n"
+    },
+    {
+      "_id": "req_dailab06",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "06 Crear título inválido",
+      "description": "Status esperado 400",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/tasks",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"ab\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 6,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 400', () => insomnia.expect(insomnia.response.status).to.eql(400));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Explica validación', () => insomnia.expect(body.error).to.eql('El título debe tener entre 3 y 100 caracteres'));\n"
+    },
+    {
+      "_id": "req_dailab07",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "07 Errores no crearon tareas",
+      "description": "Status esperado 200",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/tasks",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 7,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Sigue habiendo una tarea', () => insomnia.expect(body.tasks.length).to.eql(1));\n"
+    },
+    {
+      "_id": "req_dailab08",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "08 Crear tarea válida",
+      "description": "Status esperado 201",
+      "method": "POST",
+      "url": "{{ _.baseUrl }}/api/tasks",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"title\": \"Probar API en clase\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 8,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 201', () => insomnia.expect(insomnia.response.status).to.eql(201));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Identificador correcto', () => insomnia.expect(body.id).to.eql(2));\ninsomnia.test('Título correcto', () => insomnia.expect(body.title).to.eql('Probar API en clase'));\ninsomnia.test('Comienza pendiente', () => insomnia.expect(body.completed).to.eql(false));\ninsomnia.baseEnvironment.set('taskId', String(body.id));\n"
+    },
+    {
+      "_id": "req_dailab09",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "09 Consultar tarea creada",
+      "description": "Status esperado 200",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/tasks/{{ _.taskId }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 9,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Es la tarea creada', () => insomnia.expect(body.id).to.eql(2));\ninsomnia.test('Título guardado', () => insomnia.expect(body.title).to.eql('Probar API en clase'));\n"
+    },
+    {
+      "_id": "req_dailab10",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "10 Completar con tipo incorrecto",
+      "description": "Status esperado 400",
+      "method": "PATCH",
+      "url": "{{ _.baseUrl }}/api/tasks/{{ _.taskId }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"completed\": \"true\"\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 10,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 400', () => insomnia.expect(insomnia.response.status).to.eql(400));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Rechaza string', () => insomnia.expect(body.error).to.eql('completed debe ser booleano'));\n"
+    },
+    {
+      "_id": "req_dailab11",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "11 Completar tarea",
+      "description": "Status esperado 200",
+      "method": "PATCH",
+      "url": "{{ _.baseUrl }}/api/tasks/{{ _.taskId }}",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"completed\": true\n}"
+      },
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 11,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Quedó completada', () => insomnia.expect(body.completed).to.eql(true));\n"
+    },
+    {
+      "_id": "req_dailab12",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "12 Borrar tarea",
+      "description": "Status esperado 204",
+      "method": "DELETE",
+      "url": "{{ _.baseUrl }}/api/tasks/{{ _.taskId }}",
+      "body": {},
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 12,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 204', () => insomnia.expect(insomnia.response.status).to.eql(204));\ninsomnia.test('Respuesta sin body', () => insomnia.expect(insomnia.response.text()).to.eql(''));\n"
+    },
+    {
+      "_id": "req_dailab13",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "13 Consultar tarea borrada",
+      "description": "Status esperado 404",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/tasks/{{ _.taskId }}",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 13,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 404', () => insomnia.expect(insomnia.response.status).to.eql(404));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Ya no existe', () => insomnia.expect(body.error).to.eql('Tarea no encontrada'));\n"
+    },
+    {
+      "_id": "req_dailab14",
+      "_type": "request",
+      "parentId": "wrk_dailab",
+      "name": "14 Listado final limpio",
+      "description": "Status esperado 200",
+      "method": "GET",
+      "url": "{{ _.baseUrl }}/api/tasks",
+      "body": {},
+      "headers": [],
+      "parameters": [],
+      "authentication": {},
+      "metaSortKey": 14,
+      "isPrivate": false,
+      "settingSendCookies": false,
+      "settingStoreCookies": false,
+      "preRequestScript": "",
+      "afterResponseScript": "insomnia.test('Status 200', () => insomnia.expect(insomnia.response.status).to.eql(200));\ninsomnia.test('Content-Type JSON', () => { const h = insomnia.response.headers.find(h => h.key.toLowerCase() === 'content-type'); insomnia.expect(h.value).to.include('application/json'); });\nconst body = insomnia.response.json();\ninsomnia.test('Solo queda la inicial', () => insomnia.expect(body.tasks.length).to.eql(1));\n"
+    }
+  ]
+}

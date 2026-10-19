@@ -1,0 +1,29 @@
+{
+  "name": "api-testing-lab",
+  "version": "1.0.0",
+  "description": "Laboratorio DAI: misma API para Postman, Insomnia, Newman y Supertest",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test tests/api.test.js",
+    "test:supertest": "node --test tests/api.test.js",
+    "test:newman": "node scripts/run-newman.js",
+    "test:newman:auto": "node scripts/run-newman.js --auto",
+    "demo:fallo": "node scripts/run-newman.js --auto --fallo",
+    "verify": "npm run test:supertest && npm run test:newman:auto"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "5.2.1"
+  },
+  "devDependencies": {
+    "newman": "6.2.3",
+    "supertest": "7.3.1"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  }
+}
